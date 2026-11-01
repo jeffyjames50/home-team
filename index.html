@@ -349,6 +349,24 @@ label.f,.f{display:flex;flex-direction:column;gap:7px;font-weight:700;font-size:
 <main class="wrap">
   <section id="v-loading" class="center"><div class="loader"><svg viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="lgB" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff8a4c"/><stop offset="1" stop-color="#ff3d7f"/></linearGradient></defs><rect width="48" height="48" rx="15" fill="url(#lgB)"/><path d="M11.5 23.2 24 12.5l12.5 10.7V34a3 3 0 0 1-3 3h-19a3 3 0 0 1-3-3z" fill="#fff"/></svg>Opening your home…</div></section>
 
+  <section id="v-signin" class="center" hidden>
+    <div class="onboard-card glass">
+      <svg class="hero-ill" viewBox="0 0 340 170" aria-hidden="true">
+        <circle cx="110" cy="96" r="66" class="f-lilac"/><circle cx="240" cy="80" r="56" class="f-mint"/>
+        <path d="M128 92 170 56l42 36v54a6 6 0 0 1-6 6h-72a6 6 0 0 1-6-6z" class="f-surface s-ink" stroke-width="3" stroke-linejoin="round"/>
+        <path d="M118 96 170 50l52 46" fill="none" class="s-acc" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+        <rect x="156" y="104" width="28" height="30" rx="7" class="f-acc"/><path d="M163 104v-8a7 7 0 0 1 14 0v8" fill="none" class="s-ink" stroke-width="3"/>
+        <circle cx="170" cy="118" r="3" class="f-surface"/>
+        <path d="M262 26l4 10 10 4-10 4-4 10-4-10-10-4 10-4z" class="f-acc2"/><path d="M70 34l3 7 7 3-7 3-3 7-3-7-7-3 7-3z" class="f-gold"/>
+      </svg>
+      <p class="kicker">Almost there</p>
+      <h1>Sign in to open your board</h1>
+      <p>Your team, tasks, scores and lists are saved in Claude, not in this browser. Sign in to Claude here, then open the board link again. Everything will be where you left it, and you won't have to set anything up.</p>
+      <a class="btn primary" href="https://claude.ai/artifact/MJtQLjKBsWmQa3TX8emnSz" target="_blank" rel="noopener">Open Home Team in Claude</a>
+      <p class="hint" style="user-select:all;overflow-wrap:anywhere">https://claude.ai/artifact/MJtQLjKBsWmQa3TX8emnSz</p>
+    </div>
+  </section>
+
   <section id="v-onboard" class="center" hidden>
     <div class="onboard-card glass">
       <svg class="hero-ill" viewBox="0 0 340 210" aria-hidden="true">
@@ -521,9 +539,7 @@ const ILL={
 const RX=[['kiss','😘','Kiss'],['hug','🤗','Hug'],['love','❤️','Love'],['laugh','😂','Haha'],['clap','👏','Proud of you'],['fire','🔥','On fire'],['wow','😮','Wow'],['aww','🥺','Aww'],['eyeroll','🙄','Eye roll'],['angry','😠','Angry']];
 const COLLS=['members','tasks','kudos','shopping','notes','reactions'];
 const S={members:[],tasks:[],kudos:[],shopping:[],notes:[],reactions:[]};
-const ui={view:'board',boardFilter:'all',col:'todo',period:'week',kPts:'10',picker:null};
-const merge=(a,b)=>{const o={...a};for(const k in b){const v=b[k];o[k]=v&&typeof v==='object'&&!Array.isArray(v)&&a&&a[k]&&typeof a[k]==='object'?merge(a[k],v):v}return o};
-const VIEWS=NAV.map(n=>n[0]);
+const ui={view:'board',boardFilter:'all',col:'todo',period:'week',kPts:'10',picker:null};const VIEWS=NAV.map(n=>n[0]);
 let me=lsGet('ht-me');
 let mode='loading',api=null,membersReady=false,askedWho=false;
 {const v=lsGet('ht-view');if(VIEWS.includes(v))ui.view=v}
@@ -537,16 +553,6 @@ function hideBanner(){$('#banner').hidden=true}
 let toastT;
 function toast(t){const el=$('#toast');el.textContent=t;el.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>el.hidden=true,2600)}
 
-function localStore(){
-  let data=null;try{data=JSON.parse(lsGet('ht-local')||'null')}catch(e){}
-  data=data||{};COLLS.forEach(c=>S[c]=Array.isArray(data[c])?data[c]:[]);
-  const save=()=>{const o={};COLLS.forEach(c=>o[c]=S[c]);lsSet('ht-local',JSON.stringify(o));render();return true};
-  return{
-    async add(c,d,id=uid()){S[c]=[...S[c],{...d,id}];save();return id},
-    async update(c,id,d){S[c]=S[c].map(x=>x.id===id?merge(x,d):x);return save()},
-    async remove(c,id){S[c]=S[c].filter(x=>x.id!==id);return save()}
-  };
-}
 function dbStore(db){
   const pending=new Set(COLLS);
   const timer=setTimeout(()=>{if(pending.size)showBanner("Can't reach your saved data yet. It will load as soon as the connection is back.")},10000);
@@ -635,11 +641,13 @@ function setSegs(){$$('[data-seg]').forEach(s=>{const v=String(ui[s.dataset.seg]
 
 /* ---------- render ---------- */
 function render(){
-  const ready=mode!=='loading'&&membersReady;
+  const off=mode==='offline';
+  const ready=!off&&mode!=='loading'&&membersReady;
   const has=S.members.length>0;
   const app=ready&&has;
   if(me&&ready&&!mem(me)){me=null;lsSet('ht-me',null)}
-  $('#v-loading').hidden=ready;
+  $('#v-loading').hidden=ready||off;
+  $('#v-signin').hidden=!off;
   $('#v-onboard').hidden=!(ready&&!has);
   VIEWS.forEach(v=>$('#v-'+v).hidden=!app||ui.view!==v);
   $('#tabs').hidden=!app;$('#dock').hidden=!app;$('#meBtn').hidden=!app;
@@ -970,10 +978,16 @@ render();
 (async()=>{
   let db=null;
   try{if(window.claude&&typeof window.claude.use==='function')db=await window.claude.use('db')}catch(e){db=null}
-  if(db){mode='db';api=dbStore(db)}
-  else{mode='local';api=localStore();membersReady=true;showBanner('Not synced: open the board from its Claude link while signed in to share it. For now, changes are saved on this device only.')}
+  if(db){mode='db';api=dbStore(db);checkAccess()}
+  else mode='offline';
   render();
 })();
+async function checkAccess(){
+  try{
+    const u=await window.claude.use('user');
+    if(u&&(await u.can('data.write'))===false)showBanner("You can see the board but can't make changes yet. Ask the board's owner to share it with you as an Editor: Share menu, then invite by email.");
+  }catch(e){}
+}
 </script>
 
 </body>
