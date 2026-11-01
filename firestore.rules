@@ -1,0 +1,11 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Each household lives under a random 24-character code.
+    // Nobody can list households, so only people with the code or invite link can reach one.
+    match /households/{code}/{coll}/{docId} {
+      allow read, write: if code.size() >= 24
+        && coll in ['members', 'tasks', 'kudos', 'shopping', 'notes', 'reactions'];
+    }
+  }
+}

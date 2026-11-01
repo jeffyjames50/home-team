@@ -3,8 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-</head>
-<body>
+<meta name="theme-color" content="#ff5b45">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Home Team">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>Home Team</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -306,6 +312,13 @@ label.f,.f{display:flex;flex-direction:column;gap:7px;font-weight:700;font-size:
 .chips{display:flex;gap:6px;flex-wrap:wrap}
 .chips button{border:1px solid var(--line-strong);background:var(--bg);border-radius:999px;padding:6px 13px;font-weight:800;font-size:.84rem}
 .hint{margin:0;font-size:.8rem;color:var(--muted);font-weight:500}
+.create-box{border-top:1px solid var(--line);padding-top:14px}
+.create-box summary{cursor:pointer;font-weight:800;color:var(--accent);list-style:none}
+.create-box summary::-webkit-details-marker{display:none}
+.create-box[open] summary{margin-bottom:12px}
+.linkish{color:var(--accent);font-weight:800;cursor:pointer;text-decoration:underline}
+.invite{display:flex;flex-direction:column;gap:10px;background:var(--bg);border:1px solid var(--line);border-radius:18px;padding:14px}
+.invite input{font-size:.8rem}
 
 /* reactions */
 .rx{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
@@ -331,6 +344,8 @@ label.f,.f{display:flex;flex-direction:column;gap:7px;font-weight:700;font-size:
 .confetti{position:fixed;inset:0;z-index:40;pointer-events:none}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
+</head>
+<body>
 
 <div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
 
@@ -349,21 +364,34 @@ label.f,.f{display:flex;flex-direction:column;gap:7px;font-weight:700;font-size:
 <main class="wrap">
   <section id="v-loading" class="center"><div class="loader"><svg viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="lgB" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff8a4c"/><stop offset="1" stop-color="#ff3d7f"/></linearGradient></defs><rect width="48" height="48" rx="15" fill="url(#lgB)"/><path d="M11.5 23.2 24 12.5l12.5 10.7V34a3 3 0 0 1-3 3h-19a3 3 0 0 1-3-3z" fill="#fff"/></svg>Opening your home…</div></section>
 
-  <section id="v-signin" class="center" hidden>
+  <section id="v-join" class="center" hidden>
     <div class="onboard-card glass">
       <svg class="hero-ill" viewBox="0 0 340 170" aria-hidden="true">
         <circle cx="110" cy="96" r="66" class="f-lilac"/><circle cx="240" cy="80" r="56" class="f-mint"/>
         <path d="M128 92 170 56l42 36v54a6 6 0 0 1-6 6h-72a6 6 0 0 1-6-6z" class="f-surface s-ink" stroke-width="3" stroke-linejoin="round"/>
         <path d="M118 96 170 50l52 46" fill="none" class="s-acc" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
-        <rect x="156" y="104" width="28" height="30" rx="7" class="f-acc"/><path d="M163 104v-8a7 7 0 0 1 14 0v8" fill="none" class="s-ink" stroke-width="3"/>
-        <circle cx="170" cy="118" r="3" class="f-surface"/>
-        <path d="M262 26l4 10 10 4-10 4-4 10-4-10-10-4 10-4z" class="f-acc2"/><path d="M70 34l3 7 7 3-7 3-3 7-3-7-7-3 7-3z" class="f-gold"/>
+        <rect x="156" y="108" width="28" height="44" rx="6" class="f-acc"/><circle cx="178" cy="130" r="2.4" class="f-surface"/>
+        <circle cx="66" cy="132" r="13" class="f-p1"/><path d="M45 170a21 21 0 0 1 42 0z" class="f-p1"/>
+        <circle cx="276" cy="132" r="13" class="f-p2"/><path d="M255 170a21 21 0 0 1 42 0z" class="f-p2"/>
+        <path d="M262 22l4 10 10 4-10 4-4 10-4-10-10-4 10-4z" class="f-acc2"/><path d="M70 30l3 7 7 3-7 3-3 7-3-7-7-3 7-3z" class="f-gold"/>
       </svg>
-      <p class="kicker">Almost there</p>
-      <h1>Sign in to open your board</h1>
-      <p>Your team, tasks, scores and lists are saved in Claude, not in this browser. Sign in to Claude here, then open the board link again. Everything will be where you left it, and you won't have to set anything up.</p>
-      <a class="btn primary" href="https://claude.ai/artifact/MJtQLjKBsWmQa3TX8emnSz" target="_blank" rel="noopener">Open Home Team in Claude</a>
-      <p class="hint" style="user-select:all;overflow-wrap:anywhere">https://claude.ai/artifact/MJtQLjKBsWmQa3TX8emnSz</p>
+      <p class="kicker">Welcome home</p>
+      <h1>Open your household</h1>
+      <p>Open your invite link on this device, or paste your household code. You only do this once per browser.</p>
+      <form id="joinForm">
+        <label class="f" for="joinCode">Household code<input type="text" id="joinCode" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="ABCD-EFGH-JKLM-…" required></label>
+        <button class="btn primary" type="submit">Open our board</button>
+      </form>
+      <details class="create-box">
+        <summary>First time? Create your household</summary>
+        <form id="createForm">
+          <label class="f" for="cr1">Your name<input type="text" id="cr1" maxlength="24" autocomplete="off"></label>
+          <label class="f" for="cr2">Second person<input type="text" id="cr2" maxlength="24" autocomplete="off"></label>
+          <button class="btn primary" type="submit">Create household</button>
+          <p class="hint">Moving from the old board? <label for="importFile" class="linkish">Import a backup file</label> instead of typing names.</p>
+          <input type="file" id="importFile" accept="application/json,.json" hidden>
+        </form>
+      </details>
     </div>
   </section>
 
@@ -482,7 +510,10 @@ label.f,.f{display:flex;flex-direction:column;gap:7px;font-weight:700;font-size:
 </div>
 <div class="toast" id="toast" role="status" hidden></div>
 
-<script>
+<script type="module">
+import {FIREBASE_CONFIG} from './config.js';
+import {initializeApp} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import {initializeFirestore,persistentLocalCache,persistentMultipleTabManager,collection,doc,onSnapshot,setDoc,deleteDoc,getDocs,query,limit} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 const $=s=>document.querySelector(s);
 const $$=s=>[...document.querySelectorAll(s)];
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -553,33 +584,49 @@ function hideBanner(){$('#banner').hidden=true}
 let toastT;
 function toast(t){const el=$('#toast');el.textContent=t;el.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>el.hidden=true,2600)}
 
-function dbStore(db){
+const CONFIGURED=!!(FIREBASE_CONFIG&&FIREBASE_CONFIG.projectId&&!/^PASTE/.test(FIREBASE_CONFIG.apiKey||''));
+let fs=null,household=null;
+if(CONFIGURED){
+  const app=initializeApp(FIREBASE_CONFIG);
+  try{fs=initializeFirestore(app,{localCache:persistentLocalCache({tabManager:persistentMultipleTabManager()})})}
+  catch(e){fs=initializeFirestore(app,{})}
+}
+const ALPHA='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+function newCode(){const a=new Uint8Array(24);crypto.getRandomValues(a);return[...a].map(b=>ALPHA[b%32]).join('')}
+const cleanCode=c=>String(c||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
+const prettyCode=c=>c.match(/.{1,4}/g).join('-');
+const inviteLink=()=>`${location.origin}${location.pathname}#h=${household}`;
+async function householdExists(code){
+  try{const snap=await getDocs(query(collection(fs,'households',code,'members'),limit(1)));return !snap.empty}
+  catch(e){return null}
+}
+function fsStore(key){
   const pending=new Set(COLLS);
   const timer=setTimeout(()=>{if(pending.size)showBanner("Can't reach your saved data yet. It will load as soon as the connection is back.")},10000);
   COLLS.forEach(c=>{
-    db.collection(c).onSnapshot(snap=>{
+    onSnapshot(collection(fs,'households',key,c),{includeMetadataChanges:true},snap=>{
       S[c]=snap.docs.map(d=>({...d.data(),id:d.id}));
       if(c==='members'&&(!snap.metadata.fromCache||snap.size))membersReady=true;
       if(!snap.metadata.fromCache&&pending.delete(c)&&!pending.size){clearTimeout(timer);hideBanner()}
       render();
     },err=>{
       pending.delete(c);clearTimeout(timer);if(c==='members')membersReady=true;
-      showBanner(err.code==='revoked'?'Your access to this board changed. Reload the page to see what you can do now.':'Lost the connection to saved data. Reload the page to reconnect.');
+      showBanner(err.code==='permission-denied'?"This household code isn't accepted. Check the code or open your invite link again.":'Lost the connection to saved data. Reload the page to reconnect.');
       render();
     });
   });
-  const run=async fn=>{
-    try{await fn();return true}catch(e){
-      if(e&&e.code==='unavailable'){await new Promise(r=>setTimeout(r,400+Math.random()*700));try{await fn();return true}catch(e2){e=e2}}
-      toast(e&&e.code==='invalid_argument'?"You have view-only access, so this can't be saved. Ask for Contributor access.":e&&e.code==='quota_exceeded'?'Storage is full. Delete some old items, then try again.':"Couldn't save that. Check your connection and try again.");
-      return false;
-    }
-  };
+  const ref=(c,id)=>doc(fs,'households',key,c,id);
+  const fail=e=>toast(e&&e.code==='permission-denied'?"This change wasn't allowed. Check your household code.":"Couldn't save that. Check your connection and try again.");
+  // Writes are optimistic: the snapshot shows them at once, and offline writes sync later.
   return{
-    async add(c,d,id=uid()){return(await run(()=>db.collection(c).doc(id).set(d)))?id:null},
-    update:(c,id,d)=>run(()=>db.collection(c).doc(id).update(d)),
-    remove:(c,id)=>run(()=>db.collection(c).doc(id).delete())
+    async add(c,d,id=uid()){setDoc(ref(c,id),d).catch(fail);return id},
+    async update(c,id,d){setDoc(ref(c,id),d,{merge:true}).catch(fail);return true},
+    async remove(c,id){deleteDoc(ref(c,id)).catch(fail);return true}
   };
+}
+function connect(code){
+  household=code;lsSet('ht-household',code);
+  mode='db';api=fsStore(code);render();
 }
 
 /* ---------- helpers ---------- */
@@ -641,13 +688,13 @@ function setSegs(){$$('[data-seg]').forEach(s=>{const v=String(ui[s.dataset.seg]
 
 /* ---------- render ---------- */
 function render(){
-  const off=mode==='offline';
+  const off=mode==='join';
   const ready=!off&&mode!=='loading'&&membersReady;
   const has=S.members.length>0;
   const app=ready&&has;
   if(me&&ready&&!mem(me)){me=null;lsSet('ht-me',null)}
   $('#v-loading').hidden=ready||off;
-  $('#v-signin').hidden=!off;
+  $('#v-join').hidden=!off;
   $('#v-onboard').hidden=!(ready&&!has);
   VIEWS.forEach(v=>$('#v-'+v).hidden=!app||ui.view!==v);
   $('#tabs').hidden=!app;$('#dock').hidden=!app;$('#meBtn').hidden=!app;
@@ -824,6 +871,10 @@ function openPeople(){
   openSheet('People',`<div style="display:flex;flex-direction:column;gap:12px">
     ${ms.map(m=>`<div class="person">${av(m,'lg')}<input type="text" id="pn-${esc(m.id)}" value="${esc(m.name)}" maxlength="24" aria-label="Name"><button class="btn sm" data-act="rename" data-id="${esc(m.id)}">Save</button>${sw(m)}<button class="btn sm danger" data-act="remove-person" data-id="${esc(m.id)}" data-confirm>Remove</button></div>`).join('')}
     <form id="addPerson" class="person"><input type="text" id="newPerson" placeholder="Add a person" maxlength="24" required><button class="btn sm primary" type="submit">Add</button></form>
+    <div class="invite"><span class="lbl">Invite link</span><p class="hint">Open this on any phone, laptop or browser to go straight to your board. Keep it private: anyone with it can see and change the board.</p>
+      <input type="text" id="inviteLink" readonly value="${esc(inviteLink())}" aria-label="Invite link">
+      <p class="hint">Household code: <b style="user-select:all">${esc(prettyCode(household))}</b></p>
+      <div class="sheet-actions"><button class="btn sm primary" data-act="copy-invite">Copy link</button>${navigator.share?'<button class="btn sm" data-act="share-invite">Share</button>':''}<button class="btn sm" data-act="export">Download backup</button><span class="spacer"></span><button class="btn sm danger" data-act="leave" data-confirm>Sign out this device</button></div></div>
     <button class="btn ghost" data-act="who" style="align-self:flex-start">Back</button></div>`,
   root=>root.querySelector('#addPerson').addEventListener('submit',async e=>{
     e.preventDefault();const name=root.querySelector('#newPerson').value.trim();if(!name)return;
@@ -928,6 +979,10 @@ document.addEventListener('click',async e=>{
   switch(el.dataset.act){
     case'seg':ui[el.closest('[data-seg]').dataset.seg]=el.dataset.val;render();break;
     case'close':closeSheet();break;
+    case'copy-invite':{const i=$('#inviteLink');navigator.clipboard?.writeText(i.value).then(()=>toast('Invite link copied'),()=>{i.select();toast('Select and copy the link')})??(i.select(),toast('Select and copy the link'));break}
+    case'share-invite':navigator.share({title:'Home Team',text:'Our Home Team board',url:inviteLink()}).catch(()=>{});break;
+    case'export':exportBackup();break;
+    case'leave':lsSet('ht-household',null);lsSet('ht-me',null);location.reload();break;
     case'rx-open':ui.picker=ui.picker===el.dataset.key?null:el.dataset.key;render();break;
     case'rx':{const r=el.getBoundingClientRect();await react(el.dataset.key,el.dataset.e,r.left+r.width/2,r.top);break}
     case'who':openWho();break;
@@ -974,20 +1029,57 @@ $('#shopForm').addEventListener('submit',async e=>{
   await api.add('shopping',{item,qty,bought:false,addedBy:me||null,createdAt:Date.now()});
 });
 
-render();
-(async()=>{
-  let db=null;
-  try{if(window.claude&&typeof window.claude.use==='function')db=await window.claude.use('db')}catch(e){db=null}
-  if(db){mode='db';api=dbStore(db);checkAccess()}
-  else mode='offline';
-  render();
-})();
-async function checkAccess(){
-  try{
-    const u=await window.claude.use('user');
-    if(u&&(await u.can('data.write'))===false)showBanner("You can see the board but can't make changes yet. Ask the board's owner to share it with you as an Editor: Share menu, then invite by email.");
-  }catch(e){}
+function exportBackup(){
+  const data={app:'home-team',version:1,exportedAt:new Date().toISOString()};
+  COLLS.forEach(c=>data[c]=S[c]);
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
+  a.download=`home-team-backup-${today()}.json`;document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),2000);
 }
+async function importBackup(file){
+  let data;try{data=JSON.parse(await file.text())}catch(e){toast("That file isn't a Home Team backup.");return}
+  if(!data||!Array.isArray(data.members)||!data.members.length){toast("That backup has no people in it.");return}
+  const code=newCode();
+  for(const c of COLLS)for(const d of (Array.isArray(data[c])?data[c]:[])){
+    const {id,...body}=d;if(id)await setDoc(doc(fs,'households',code,c,String(id)),body);
+  }
+  connect(code);askedWho=false;toast('Backup imported. Share the invite link from Manage people.');
+}
+$('#joinForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const code=cleanCode($('#joinCode').value);
+  if(code.length<24){toast('That code is too short. It has 24 letters and numbers.');return}
+  const ok=await householdExists(code);
+  if(ok===false){toast('No household found with that code.');return}
+  if(ok===null){toast("Couldn't check the code. Check your connection and try again.");return}
+  connect(code);
+});
+$('#createForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const a=$('#cr1').value.trim(),b=$('#cr2').value.trim();
+  if(!a){toast('Add at least your name.');$('#cr1').focus();return}
+  const code=newCode(),now=Date.now(),id=uid();
+  try{
+    await setDoc(doc(fs,'households',code,'members',id),{name:a,color:1,createdAt:now});
+    if(b)await setDoc(doc(fs,'households',code,'members',uid()),{name:b,color:2,createdAt:now+1});
+  }catch(err){toast("Couldn't create the household. Check your connection and try again.");return}
+  me=id;lsSet('ht-me',id);askedWho=true;connect(code);
+  setTimeout(()=>{openPeople();toast('Household ready. Send the invite link to your partner.')},400);
+});
+$('#importFile').addEventListener('change',e=>{const f=e.target.files[0];if(f)importBackup(f);e.target.value=''});
+
+{
+  const m=location.hash.match(/h=([A-Za-z0-9-]+)/);
+  const fromLink=m?cleanCode(m[1]):null;
+  if(m)history.replaceState(null,'',location.pathname+location.search);
+  const saved=cleanCode(lsGet('ht-household'));
+  if(!CONFIGURED){mode='join';render();showBanner('Setup is not finished: add your Firebase settings to config.js.');$$('#v-join button').forEach(b=>b.disabled=true)}
+  else if(fromLink&&fromLink.length>=24){if(fromLink!==saved){lsSet('ht-me',null);me=null}connect(fromLink)}
+  else if(saved.length>=24)connect(saved);
+  else{mode='join';render()}
+}
+
 </script>
 
 </body>
