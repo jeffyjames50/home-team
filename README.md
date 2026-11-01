@@ -17,7 +17,7 @@ Live app (Claude artifact): https://claude.ai/artifact/MJtQLjKBsWmQa3TX8emnSz
 - Fonts from Google Fonts: Unbounded for headings, Manrope for body text.
 - All artwork is inline SVG; the confetti is drawn on a Canvas.
 - Data lives in the Claude artifact database (`window.claude.use("db")`), a realtime document store. Changes sync live through `onSnapshot`.
-- Opened outside Claude (for example straight from this repo), the app falls back to `localStorage`, so data stays on that one device.
+- Opened outside Claude, or while signed out, the app shows a sign-in screen that links back to the board. It never starts a new, empty group.
 
 ## Run locally
-Open `index.html` in a browser. It runs in local, unsynced mode.
+Open `index.html` in a browser to preview it. The shared data only loads through the Claude link above while you are signed in.
