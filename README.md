@@ -17,7 +17,7 @@ It works in any browser on any phone or laptop. Nobody needs an account: you ope
 - `index.html`: plain HTML, CSS and JavaScript (an ES module), with no framework and no build step.
 - **Firebase Cloud Firestore** for realtime shared data, with an offline cache. Loaded from Google's CDN.
 - Google Fonts (Unbounded and Manrope), inline SVG artwork, and Canvas confetti.
-- Hosted on **GitHub Pages**. `manifest.webmanifest` and the icons let you add it to a phone's home screen.
+- Hosted on **Netlify** from this repo (`netlify.toml`). Every push to `main` deploys automatically. `manifest.webmanifest` and the icons let you add it to a phone's home screen.
 - `claude-artifact/home-team.html` is the earlier version that runs as a Claude artifact.
 
 ## How access works
@@ -28,7 +28,7 @@ Each household gets a random 24-character code (about 120 bits), and its data li
 2. Go to **Build → Firestore Database → Create database**, choose a location near you, and start in **production mode**.
 3. On the **Rules** tab, paste the contents of `firestore.rules`, then click **Publish**.
 4. Go to **Project settings → Your apps → Web (`</>`)**, register an app called "Home Team" (Firebase Hosting isn't needed), and copy the `firebaseConfig` values into `config.js`.
-5. Turn on GitHub Pages: **Settings → Pages → Deploy from a branch → `main` / root**.
+5. On https://app.netlify.com, choose **Add new site → Import an existing project → GitHub → home-team**. Leave the build command empty, set the publish directory to `.`, and click **Deploy**. Rename the site under **Site configuration → Change site name**.
 6. Open the site, choose **Create your household** (or **Import a backup file**), then send the invite link from **Manage people** to your partner.
 
 ## Run locally
