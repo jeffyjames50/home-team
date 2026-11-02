@@ -216,6 +216,19 @@ label.f,.f{display:flex;flex-direction:column;gap:7px;font-weight:700;font-size:
 .bar i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,color-mix(in srgb,var(--c) 55%,#fff),var(--c));transition:width .8s cubic-bezier(.2,.8,.2,1)}
 .split{display:flex;gap:8px;flex-wrap:wrap}
 .split span{font-size:.78rem;font-weight:700;border-radius:999px;padding:3px 10px;background:var(--line)}
+.breakdown{border-top:1px solid var(--line);padding-top:10px}
+.breakdown summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:6px;font-size:.84rem;font-weight:800;color:var(--accent)}
+.breakdown summary::-webkit-details-marker{display:none}
+.breakdown summary svg{width:16px;height:16px;transition:transform .2s}
+.breakdown[open] summary svg{transform:rotate(180deg)}
+.breakdown ul{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:6px;max-height:280px;overflow:auto}
+.breakdown li{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:12px;background:var(--line);font-size:.86rem}
+.bd-kind{flex:none;font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.bd-kind.k{color:var(--accent)}
+.bd-title{flex:1;min-width:0;font-weight:600;overflow-wrap:anywhere}
+.bd-title small{display:block;font-size:.72rem;font-weight:600;color:var(--muted)}
+.breakdown li b{flex:none;font-family:var(--f-display);font-variant-numeric:tabular-nums}
+.breakdown .hint{margin-top:8px}
 .lead-line{font-family:var(--f-display);font-size:clamp(1rem,2.6vw,1.25rem);font-weight:500;margin:0;color:var(--muted)}
 .lead-line b{color:var(--ink);font-weight:600}
 .wall{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
@@ -574,7 +587,7 @@ const ILL={
 const RX=[['kiss','😘','Kiss'],['hug','🤗','Hug'],['love','❤️','Love'],['laugh','😂','Haha'],['clap','👏','Proud of you'],['fire','🔥','On fire'],['wow','😮','Wow'],['aww','🥺','Aww'],['eyeroll','🙄','Eye roll'],['angry','😠','Angry']];
 const COLLS=['members','tasks','kudos','shopping','notes','reactions'];
 const S={members:[],tasks:[],kudos:[],shopping:[],notes:[],reactions:[]};
-const ui={view:'board',boardFilter:'all',col:'todo',period:'week',kPts:'10',picker:null};const VIEWS=NAV.map(n=>n[0]);
+const ui={view:'board',boardFilter:'all',col:'todo',period:'week',kPts:'10',picker:null,breakdown:new Set()};const VIEWS=NAV.map(n=>n[0]);
 let me=lsGet('ht-me');
 let mode='loading',api=null,membersReady=false,askedWho=false;
 {const v=lsGet('ht-view');if(VIEWS.includes(v))ui.view=v}
@@ -658,9 +671,10 @@ function ago(ts){
 }
 function periodStart(p){const d=new Date();d.setHours(0,0,0,0);if(p==='week'){d.setDate(d.getDate()-((d.getDay()+6)%7));return+d}if(p==='month'){d.setDate(1);return+d}return 0}
 function tally(since){
-  const r={};members().forEach(m=>r[m.id]={m,task:0,kudos:0,done:0,kc:0,total:0});
-  S.tasks.forEach(t=>{if(t.status==='done'&&r[t.doneBy]&&(t.doneAt||0)>=since){r[t.doneBy].task+=+t.points||0;r[t.doneBy].done++}});
-  S.kudos.forEach(k=>{if(r[k.to]&&(k.createdAt||0)>=since){r[k.to].kudos+=+k.points||0;r[k.to].kc++}});
+  const r={};members().forEach(m=>r[m.id]={m,task:0,kudos:0,done:0,kc:0,total:0,items:[]});
+  S.tasks.forEach(t=>{if(t.status==='done'&&r[t.doneBy]&&(t.doneAt||0)>=since){r[t.doneBy].task+=+t.points||0;r[t.doneBy].done++;r[t.doneBy].items.push({kind:t.type==='chore'?'Chore':'Task',title:t.title,pts:+t.points||0,at:t.doneAt||0})}});
+  S.kudos.forEach(k=>{if(r[k.to]&&(k.createdAt||0)>=since){r[k.to].kudos+=+k.points||0;r[k.to].kc++;r[k.to].items.push({kind:'Kudos',title:`From ${nm(k.from)}${k.message?': '+k.message:''}`,pts:+k.points||0,at:k.createdAt||0})}});
+  Object.values(r).forEach(x=>x.items.sort((a,b)=>b.at-a.at));
   return Object.values(r).map(x=>(x.total=x.task+x.kudos,x)).sort((a,b)=>b.total-a.total);
 }
 function streak(id){
@@ -787,6 +801,10 @@ function renderScores(){
     <div class="big-pts">${r.total}<small>pts</small></div>
     <div class="bar" style="--c:var(--p${r.m.color||1})"><i style="width:${Math.round(r.total/max*100)}%"></i></div>
     <div class="split"><span>${r.task} from tasks</span><span>${r.kudos} from ${r.kc} kudos</span></div>
+    <details class="breakdown" data-bd="${esc(r.m.id)}" ${ui.breakdown.has(r.m.id)?'open':''}>
+      <summary>${svg('<path d="M6 9l6 6 6-6"/>',2.4)}Where the points came from</summary>
+      ${r.items.length?`<ul>${r.items.map(x=>`<li><span class="bd-kind ${x.kind==='Kudos'?'k':''}">${x.kind}</span><span class="bd-title">${esc(x.title)}<small>${ago(x.at)}</small></span><b>+${x.pts}</b></li>`).join('')}</ul>`:`<p class="hint">Nothing ${label} yet.</p>`}
+    </details>
     ${rxBar(`lb-${ui.period}-${periodStart(ui.period)}-${r.m.id}`)}</div>`}).join('');
 
   const all=tally(0),week=tally(periodStart('week'));
@@ -984,6 +1002,8 @@ function arm(el){
   setTimeout(()=>{if(el.isConnected&&el.dataset.armed){delete el.dataset.armed;el.textContent=el.dataset.label}},3000);
 }
 
+// Keep score breakdowns open across live re-renders. toggle doesn't bubble, so listen in the capture phase.
+document.addEventListener('toggle',e=>{const d=e.target;if(!d.matches?.('details[data-bd]'))return;d.open?ui.breakdown.add(d.dataset.bd):ui.breakdown.delete(d.dataset.bd)},true);
 document.addEventListener('click',async e=>{
   const tab=e.target.closest('[data-tab]');
   if(tab){ui.view=tab.dataset.tab;lsSet('ht-view',ui.view);render();scrollTo({top:0});return}

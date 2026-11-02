@@ -6,7 +6,7 @@ It works in any browser on any phone or laptop. Nobody needs an account: you ope
 
 ## Features
 - **Board**: tasks and chores with points, assignee, due date, and daily or weekly repeats. Status moves To do → In progress → Done.
-- **Points and leaderboard**: a finished task gives its points to the person it's assigned to, or to whoever marks it done when it's for anyone. Totals for this week, this month and all time.
+- **Points and leaderboard**: a finished task gives its points to the person it's assigned to, or to whoever marks it done when it's for anyone. Totals for this week, this month and all time, with a dropdown on each person showing which tasks, chores and kudos the points came from.
 - **Appreciation wall**: notes that unlock on their own for point milestones, MVP of the week, streaks and kudos.
 - **Kudos**: thank each other and add +5 to +50 bonus points.
 - **Reactions**: 😘 🤗 ❤️ 😂 👏 🔥 😮 🥺 🙄 😠 on finished tasks, notes, kudos and leaderboard entries.
